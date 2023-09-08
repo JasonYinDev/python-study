@@ -49,7 +49,8 @@ def projects():
     "tehcui-vue3-lite",
     "tehcui-react-lite",
     "tehcui-toolkit",
-  ]
+  ] 
 
 if __name__=="__main__":
-  uvicorn.run(app)
+  uvicorn.run("main:app",reload=True)
+  # uvicorn.run(app) 
