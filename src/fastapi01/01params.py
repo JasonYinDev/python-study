@@ -1,5 +1,5 @@
 import uvicorn
-from fastapi import FastAPI,Path,Query,Body
+from fastapi import FastAPI,Path,Query,Body,Form,Header,Cookie,Request
 from typing import List
 from pydantic import BaseModel,Field
 from fastapi.openapi.docs import get_redoc_html, get_swagger_ui_html
@@ -84,7 +84,47 @@ def post_dict(p:Car=Body(...)):
 def post_dict(p:List[Car]=Body(...)):
   return {"dict":p}
 
+# get请求没法拿body，form等
 
+@app.post("/form",summary="form demo")
+def form_data(name:str=Form(...)):
+  return name
+
+@app.post("/header",summary="get header params")
+async def get_header_params(param:str=Header(..., description="customize header",alias="Authorization")):
+  """
+  ## 当使用`Authorization`或者`authoriaztion`的时候docs界面不会自动发送请求头
+  ## 请使用postman等测试这个接口
+  """
+  return {"header":param}
+
+@app.get("/cookie",summary="get cookie params")
+async def get_cookie_param(param:str=Cookie(
+  None,
+  alias="cookieName",
+  description="customize coolie",
+  example="cookie example"
+)):
+  return {"cookie":param}
+
+
+
+@app.get("/req",summary="request object")
+async def get_request(req:Request):
+  print(req)
+  return{
+    "base_url":req.base_url,
+    "client":req.client,
+    "cookies":req.cookies,
+    "headers":req.headers,
+    "method":req.method,
+    "path_params":req.path_params,
+    "query_params":req.query_params,
+    "scope":{k:str(v) for k,v in req.scope.items()},
+    "url":req.url,
+  }
+  
+  
 
 if __name__=="__main__":
   uvicorn.run("01params:app",reload=True)
