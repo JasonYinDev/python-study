@@ -7,11 +7,11 @@ from fastapi.staticfiles import StaticFiles
 
 # from .profile import router as profile_router
 # from .user import router as user_router
-from profile import router as profile_router
-from user import router as user_router
-from docs import router as docs_router
-from auth import router as auth_router
-from upload import router as upload_router
+from register import router as register_router
+# from user import router as user_router
+# from docs import router as docs_router
+# from auth import router as auth_router
+# from upload import router as upload_router
 
 
 # app = FastAPI()
@@ -20,11 +20,11 @@ app = FastAPI(docs_url=None, redoc_url=None)
 
 app.mount('/static', StaticFiles(directory='static'))
 
-app.include_router(user_router)
-app.include_router(profile_router,deprecated=True)
-app.include_router(docs_router)
-app.include_router(auth_router)
-app.include_router(upload_router)
+app.include_router(register_router)
+# app.include_router(profile_router,deprecated=True)
+# app.include_router(docs_router)
+# app.include_router(auth_router)
+# app.include_router(upload_router)
 
 
 # <editor-fold desc="docs">
