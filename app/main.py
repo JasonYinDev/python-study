@@ -1,22 +1,31 @@
 import uvicorn
-from fastapi import FastAPI
+from fastapi import FastAPI,Path,Query,Body,Form,Header,Cookie,Request
+from typing import List
+from pydantic import BaseModel,Field
 from fastapi.openapi.docs import get_redoc_html, get_swagger_ui_html
 from fastapi.staticfiles import StaticFiles
+
+# from .profile import router as profile_router
+# from .user import router as user_router
+from router.register import router as register_router
+# from user import router as user_router
+# from docs import router as docs_router
+# from auth import router as auth_router
+# from upload import router as upload_router
+
 
 # app = FastAPI()
 
 app = FastAPI(docs_url=None, redoc_url=None)
 
-# app.add_middleware(
-#   CORSMiddleware,
-#   allow_origins=["*"], # Allows all origins
-#   allow_credentials=True,
-#   allow_methods=["*"], # Allows all methods
-#   allow_headers=["*"], # Allows all headers
-# )
-
-
 app.mount('/static', StaticFiles(directory='static'))
+
+app.include_router(register_router)
+# app.include_router(profile_router,deprecated=True)
+# app.include_router(docs_router)
+# app.include_router(auth_router)
+# app.include_router(upload_router)
+
 
 # <editor-fold desc="docs">
 @app.get("/docs", include_in_schema=False)
@@ -38,27 +47,6 @@ async def redoc_html():
 # </editor-fold>
 
 
-#添加首页
-@app.get("/")
-def index():
-  return "this is home page"
-
-
-@app.get("/users")
-def users():
-  return {
-    "msg":"Get all users",
-    "code":200
-  }
-  
-@app.get("/projects")
-def projects():
-  return [
-    "tehcui-vue2",
-    "tehcui-vue3-lite",
-    "tehcui-react-lite",
-    "tehcui-toolkit",
-  ] 
 
 if __name__=="__main__":
   uvicorn.run("main:app",reload=True)
